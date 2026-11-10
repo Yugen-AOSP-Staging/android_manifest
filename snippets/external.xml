@@ -395,30 +395,10 @@
            groups="qcom,qcom_audio,pdk-qcom"
            revision="lineage-23.2"
            remote="lineage" />
-  <project path="hardware/qcom/bt"
-           name="LineageOS/android_hardware_qcom_bt"
-           groups="qcom,pdk-qcom"
-           remote="lineage" />
-  <project path="hardware/qcom/camera"
-           name="LineageOS/android_hardware_qcom_camera"
-           groups="qcom,qcom_camera,pdk-qcom"
-           remote="lineage" />
-  <project path="hardware/qcom/data/ipacfg-mgr"
-           name="LineageOS/android_hardware_qcom_data_ipacfg-mgr"
-           groups="qcom,pdk-qcom"
-           remote="lineage" />
-  <project path="hardware/qcom/display"
-           name="LineageOS/android_hardware_qcom_display"
-           groups="qcom,qcom_display,pdk-qcom"
-           remote="lineage" />
-  <project path="hardware/qcom/gps"
-           name="LineageOS/android_hardware_qcom_gps"
-           groups="qcom,qcom_gps,pdk-qcom"
-           remote="lineage" />
-  <project path="hardware/qcom/media"
-           name="LineageOS/android_hardware_qcom_media"
-           groups="qcom,pdk-qcom"
-           remote="lineage" />
+  <!-- Legacy non-CAF hardware/qcom/{bt,camera,display,gps,media,data/ipacfg-mgr}
+       are not declared here. Their newest branches are lineage-22.2/23.0, so
+       they cannot share this manifest's lineage-24.0 default; older devices
+       that need them add the exact path and branch in snippets/devices.xml. -->
   <project path="hardware/qcom/sdm845/display"
            name="LineageOS/android_hardware_qcom_sdm845_display"
            groups="qcom,qcom_sdm845"

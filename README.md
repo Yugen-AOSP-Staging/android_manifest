@@ -5,8 +5,16 @@ LineageOS device trees.
 
 ```bash
 repo init -u https://github.com/Yugen-AOSP-Staging/android_manifest -b reimi
-repo sync -j"$(nproc)" --no-clone-bundle --no-tags
+repo sync -j4 --no-clone-bundle --no-tags
 ```
+
+AOSP's git server rate-limits anonymous clones. If you see `HTTP 429` /
+`expected 'acknowledgments'` on `android.googlesource.com` projects, drop to
+`-j2` and rerun the same command: `repo sync` resumes, it does not restart.
+Do not raise `-j` there; the limit is per IP, so more jobs make it worse.
+
+Only the LineageOS projects can fail permanently. [`tools/check-branches.py`](#validating)
+checks their pins without a sync.
 
 ## How it is built
 
@@ -53,8 +61,23 @@ remote to an absolute URL, and then validates the merged manifest.
 ## Validating
 
 ```bash
-./tools/validate.py
+./tools/validate.py        # offline: structure, duplicates, remotes, removals
+./tools/check-branches.py  # network: every pinned branch exists upstream
 ```
 
-Checks every snippet is well formed, that no project path or name is declared
-twice, and that every `remote=` resolves.
+`validate.py` resolves includes and `remove-project` entries in `repo` order.
+`check-branches.py` is the one that would have caught a stale pin before a sync:
+it asks GitHub for the heads of every snippet project and suggests the newest
+`lineage-*` branch when the pinned one is gone.
+
+### Branch pins
+
+Most snippet projects take the `lineage-24.0` default from
+`snippets/remote.xml`, but SoC-specific HALs are pinned per entry. Two rules:
+
+- Keep the per-entry `revision=` when the same repository is used at several
+  `hardware/qcom-caf/<soc>/` paths — each path needs its own branch.
+- Do not add legacy non-CAF `hardware/qcom/{camera,display,gps,media,bt}` or
+  `data/ipacfg-mgr` globally. Their newest branches are `lineage-22.2`/`23.0`
+  and they would poison every sync. Declare them per device in
+  `snippets/devices.xml`, with the branch the device tree expects.
