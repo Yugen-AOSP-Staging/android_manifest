@@ -1,0 +1,14 @@
+# Python tooling
+__pycache__/
+*.pyc
+
+# Build artefacts (in case the manifest repo is used as a source root)
+/out/
+/.repo/
+*.log
+
+# Editor / OS noise
+.DS_Store
+*.swp
+.idea/
+.vscode/

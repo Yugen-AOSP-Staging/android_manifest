@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Remotes for Project Yugen.
+
+  aosp     - upstream AOSP (defined in default.xml)
+  yugen    - everything owned by Yugen (vendor layer, compat shim)
+  lineage  - LineageOS-owned hardware glue only. We never pull Lineage's platform.
+  github   - third-party device trees and kernels
+  gitlab   - same, for maintainers who host on GitLab
+-->
+<manifest>
+  <remote name="yugen"
+          fetch="https://github.com/Yugen-AOSP-Staging"
+          revision="reimi"
+          sync-j="4" />
+
+  <remote name="lineage"
+          fetch="https://github.com/"
+          revision="lineage-24.0"
+          sync-j="4" />
+
+  <remote name="github"
+          fetch="https://github.com/" />
+
+  <remote name="gitlab"
+          fetch="https://gitlab.com/" />
+</manifest>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Per-device repositories.
+
+  Empty on purpose: Yugen v1 builds devices straight from upstream LineageOS
+  trees (remote="lineage"), so no forks are required.
+
+  Add an entry only when the device needs something LineageOS does not ship,
+  or when you are carrying a local patch. Keep one device per block, and note
+  the maintainer in a comment.
+
+  Example:
+
+  <manifest>
+    <project path="device/google/shiba"
+             name="LineageOS/android_device_google_shiba"
+             remote="lineage" />
+
+    <project path="device/google/zuma"
+             name="LineageOS/android_device_google_zuma"
+             remote="lineage" />
+
+    <project path="kernel/google/zuma"
+             name="LineageOS/android_kernel_google_zuma"
+             remote="lineage" />
+
+    <project path="vendor/google/shiba"
+             name="TheMuppets/proprietary_vendor_google_shiba"
+             remote="github" />
+  </manifest>
+-->
+<manifest>
+</manifest>

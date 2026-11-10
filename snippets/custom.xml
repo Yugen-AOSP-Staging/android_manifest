@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Projects owned by Yugen.
+
+  vendor/yugen    - product config, version identity, theme overlays.
+  vendor/lineage  - product-API shim. Unmodified LineageOS device trees call
+                    $(call inherit-product, vendor/lineage/config/common_full_phone.mk);
+                    the shim satisfies that path without importing Lineage's platform.
+                    See android_vendor_yugen_compat.
+-->
+<manifest>
+  <project path="vendor/yugen"
+           name="android_vendor_yugen"
+           remote="yugen" />
+
+  <project path="vendor/lineage"
+           name="android_vendor_yugen_compat"
+           remote="yugen" />
+</manifest>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Projects to drop before the Yugen snippets are applied.
+
+  1. AOSP device targets we do not ship (cut sync time, avoid dead trees).
+  2. AOSP projects whose path we replace with a LineageOS-owned equivalent.
+-->
+<manifest>
+
+  <!-- AOSP reference/emulator devices -->
+  <remove-project name="device/amlogic/yukawa" />
+  <remove-project name="device/amlogic/yukawa-kernel" />
+  <remove-project name="device/google/atv" />
+  <remove-project name="device/google_car" />
+  <remove-project name="device/linaro/dragonboard" />
+  <remove-project name="device/linaro/dragonboard-kernel" />
+  <remove-project name="device/linaro/hikey" />
+  <remove-project name="device/linaro/hikey-kernel" />
+  <!-- Do not remove device/sample: build/make/target/product/full_base_telephony.mk
+       copies device/sample/etc/apns-full-conf.xml into the system image. -->
+
+
+  <!-- Replaced by the LineageOS hardware layer -->
+  <remove-project name="platform/external/avb" />
+  <remove-project name="platform/external/dng_sdk" />
+  <remove-project name="platform/external/dtc" />
+  <remove-project name="platform/external/e2fsprogs" />
+  <remove-project name="platform/external/gptfdisk" />
+  <remove-project name="platform/external/mksh" />
+  <remove-project name="platform/external/tinyalsa" />
+  <remove-project name="platform/external/tinycompress" />
+  <remove-project name="platform/external/v4l2_codec2" />
+  <remove-project name="platform/external/zstd" />
+  <remove-project name="platform/hardware/broadcom/libbt" />
+  <remove-project name="platform/hardware/libhardware" />
+  <remove-project name="platform/hardware/nxp/nfc" />
+  <remove-project name="platform/hardware/qcom/wlan" />
+
+</manifest>
