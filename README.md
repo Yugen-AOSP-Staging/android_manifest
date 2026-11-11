@@ -34,10 +34,76 @@ The platform is 100% AOSP: `build/make`, `art`, `bionic`, `frameworks/base`,
 `android-17.0.0_r1`. LineageOS supplies only the HAL/vendor layer that Qualcomm
 device trees need.
 
+## What a default sync contains
+
+`snippets/external.xml` is generated from LineageOS's own manifest by
+[`tools/gen-external.py`](tools/gen-external.py), filtered to hardware-shaped
+projects. Generating it, instead of listing projects by hand, is what keeps
+three details that only bite at build time:
+
+- **`linkfile`s.** `hardware/qcom-caf/common` links `os_pickup_qssi.bp` into
+  every `hardware/qcom-caf/<soc>/Android.bp`. That file is a `soong_namespace`
+  declaration. Without it all SoC HALs share one namespace and the build stops
+  with hundreds of `module "X" already defined` errors.
+- **Per-SoC revisions.** The same repository appears at many paths, each
+  checked out on its own `lineage-24.0-caf-<soc>` branch.
+- **`groups`.** LineageOS's grouping is preserved so syncs can be narrowed.
+
+So the SoC HALs for every Qualcomm family are synced by default. That is
+intentional and harmless: having a HAL in the tree costs disk, not build time,
+because only what the device's `BoardConfig.mk`/`device.mk` inherits is built.
+Use `repo sync -g qcom,sm8250` only if you want a smaller tree.
+
+MediaTek and other non-Qualcomm families are *not* in the shared layer; a
+device opts into them by listing them in `snippets/devices.xml` (see the
+commented example there).
+
+### `notdefault` projects and `export_cflags`
+
+Six projects are tagged `groups="notdefault,lineage-soong"`:
+
+```
+hardware/qcom-caf/sm8150/display      hardware/qcom/sm7250/display
+hardware/qcom-caf/sm8250/display      hardware/qcom/sm8150/display
+hardware/qcom-caf/sm8350/display      vendor/qcom/opensource/commonsys-intf/display
+```
+
+Their `Android.bp` files use `export_cflags`, a property **LineageOS added to
+its `build/soong` fork**. Stock AOSP Soong does not know it and rejects the
+file at parse time, which fails the whole build — one bad `.bp` anywhere stops
+everything. `notdefault` keeps them out of a normal sync.
+
+If your device is sm8150/sm8250/sm8350, or uses `vendor/qcom/opensource/
+commonsys-intf/display`, you need one of:
+
+- the HAL pinned to an older branch that predates `export_cflags`, or
+- a local patch that replaces the `export_cflags: select(...)` block with a
+  plain `cflags` list, or
+- LineageOS's `build/soong` instead of AOSP's — which forfeits the "stock AOSP
+  platform" guarantee, so Yugen does not do this.
+
+To sync them anyway:
+
+```bash
+repo init -u https://github.com/Yugen-AOSP-Staging/android_manifest -b reimi \
+    -g default,lineage-soong
+```
+
 ## Adding a device
 
 1. Confirm the tree exists: `git ls-remote --heads https://github.com/LineageOS/android_device_<vendor>_<codename> lineage-24.0`
 2. Add its `device/`, `kernel/` and `vendor/` projects to `snippets/devices.xml`.
+   Everything the device needs is listed in its own `lineage.dependencies`:
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/LineageOS/android_device_<vendor>_<codename>/lineage-24.0/lineage.dependencies
+   ```
+
+   `repo` never reads that file, and stock AOSP has no `breakfast` to read it
+   for you, so its `repository`/`target_path` pairs must be copied into
+   `snippets/devices.xml` by hand. For MediaTek devices this is where
+   `hardware/mediatek`, `hardware/xiaomi` and `device/mediatek/sepolicy_vndr`
+   come from.
 3. `repo sync --local-only` (or full sync), then:
 
 ```bash

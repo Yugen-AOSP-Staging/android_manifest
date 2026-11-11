@@ -2,31 +2,79 @@
 <!--
   Per-device repositories.
 
-  Empty on purpose: Yugen v1 builds devices straight from upstream LineageOS
-  trees (remote="lineage"), so no forks are required.
+  Yugen v1 builds devices straight from upstream LineageOS trees
+  (remote="lineage"), so no forks are required. A device still needs its own
+  entries here because `repo` does not read the device tree's
+  `lineage.dependencies` file, and stock AOSP has no `breakfast` command to do
+  it for you. That file is the authoritative list: copy its `repository` and
+  `target_path` values, and use the same `lineage-24.0` branch.
 
-  Add an entry only when the device needs something LineageOS does not ship,
-  or when you are carrying a local patch. Keep one device per block, and note
-  the maintainer in a comment.
+  Keep one device per block, note the maintainer, and leave it commented out
+  until the device is actually built: a stale entry breaks everyone's sync.
 
-  Example:
+  See README.md#adding-a-device for the full checklist.
+
+  Example 1: a Qualcomm device built from a LineageOS tree that is already
+  in the manifest's hardware layer (hardware/qcom-caf/<soc> is synced by
+  default, so only the device, kernel and blobs are listed):
 
   <manifest>
     <project path="device/google/shiba"
              name="LineageOS/android_device_google_shiba"
-             remote="lineage" />
+             remote="lineage"
+             revision="lineage-24.0" />
 
     <project path="device/google/zuma"
              name="LineageOS/android_device_google_zuma"
-             remote="lineage" />
+             remote="lineage"
+             revision="lineage-24.0" />
 
     <project path="kernel/google/zuma"
              name="LineageOS/android_kernel_google_zuma"
-             remote="lineage" />
+             remote="lineage"
+             revision="lineage-24.0" />
 
     <project path="vendor/google/shiba"
              name="TheMuppets/proprietary_vendor_google_shiba"
-             remote="github" />
+             remote="github"
+             revision="lineage-24.0" />
+  </manifest>
+
+  Example 2: a MediaTek device (Xiaomi rosemary, mt6785). MediaTek hardware
+  is not part of the shared hardware layer, so hardware/mediatek,
+  hardware/xiaomi and the MTK vndr sepolicy come from the device's
+  lineage.dependencies and must be declared here:
+
+  <manifest>
+    <project path="device/xiaomi/rosemary"
+             name="LineageOS/android_device_xiaomi_rosemary"
+             remote="lineage"
+             revision="lineage-24.0" />
+
+    <project path="device/mediatek/sepolicy_vndr"
+             name="LineageOS/android_device_mediatek_sepolicy_vndr"
+             remote="lineage"
+             revision="lineage-24.0" />
+
+    <project path="hardware/mediatek"
+             name="LineageOS/android_hardware_mediatek"
+             remote="lineage"
+             revision="lineage-24.0" />
+
+    <project path="hardware/xiaomi"
+             name="LineageOS/android_hardware_xiaomi"
+             remote="lineage"
+             revision="lineage-24.0" />
+
+    <project path="kernel/xiaomi/mt6785"
+             name="LineageOS/android_kernel_xiaomi_mt6785"
+             remote="lineage"
+             revision="lineage-24.0" />
+
+    <project path="vendor/xiaomi/rosemary"
+             name="TheMuppets/proprietary_vendor_xiaomi_rosemary"
+             remote="github"
+             revision="lineage-24.0" />
   </manifest>
 -->
 <manifest>

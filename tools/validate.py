@@ -22,7 +22,12 @@ def load(path: Path, seen: set[Path], projects: list[ET.Element],
         sys.exit(f"include cycle: {path}")
     seen.add(path)
 
-    tree = ET.parse(path)
+    try:
+        tree = ET.parse(path)
+    except ET.ParseError as exc:
+        # The usual cause is a "--" inside a comment, which XML forbids.
+        sys.exit(f"{path.relative_to(ROOT)}: {exc}\n"
+                 "hint: '--' may not appear inside an XML comment")
     for node in tree.getroot():
         if node.tag == "remote":
             remotes[node.get("name")] = node.get("fetch")
